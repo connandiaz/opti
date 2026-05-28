@@ -1,0 +1,24 @@
+d_ictw = 0 #Demanda esperada del medicamento i en el CESFAM c, semana t, escenario w
+p_tw = 0 #Probabilidad de ocurrencia del escenario w en la semana t
+S0_ika = 0 #Inventario inicial del medicamento i en la bodega k con edad a
+I0_ica = 0 #Inventario inicial del medicamento i en el CESFAM c con edad a
+CC_i = 0 #Costo unitario de compra programada del medicamento i
+CE_i = 0 #Costo unitario de compra de emergencia del medicamento i
+CQ_i = 0 #Penalización unitaria por demanda insatisfecha del medicamento i
+CVc_i = 0 #Costo unitario por vencimiento del medicamento i en CESFAM
+CVb_i = 0 #Costo unitario por vencimiento del medicamento i en bodega
+CMb_ik = 0 #Costo unitario de mantener inventario del medicamento i en bodega k
+CMc_ic = 0 #Costo unitario de mantener inventario del medicamento i en CESFAM c
+CD_ikc = 0 #Costo unitario de distribución del medicamento i desde bodega k hacia CESFAM c
+F_k = 0 #Costo fijo de activar o utilizar la bodega k
+Capb_ik = 0 #Capacidad máxima de almacenamiento del medicamento i en bodega k
+Capc_ic = 0 #Capacidad máxima de almacenamiento del medicamento i en CESFAM c
+A_ikt = 0 #Disponibilidad máxima de compra programada del medicamento i para bodega k en semana t
+B_t = 0 #Presupuesto disponible para compras en semana t
+Gamma = 0 #Presupuesto máximo permitido para el costo total por vencimiento de medicamentos en el sistema
+L_i = 0 #Vida útil máxima del medicamento i medida en semanas
+alpha_i = 0 #Nivel mínimo de servicio exigido para el medicamento i
+G_kt = 0 #Capacidad máxima de despacho de la bodega k en la semana t
+H_ct = 0 #Capacidad máxima de recepción del CESFAM c en la semana t
+M = 0 #Constante suficientemente grande para restricciones lógicas
+
