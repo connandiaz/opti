@@ -21,7 +21,7 @@ sensibilidad = [
 ]
 
 
-for atributo, nombre_txt, p_B, p_d, p_A in sensibilidad:
+for parametro, nombre_txt, p_B, p_d, p_A in sensibilidad:
 
     modelo = Model()
     modelo.setParam("TimeLimit", 60*30)
@@ -80,53 +80,55 @@ for atributo, nombre_txt, p_B, p_d, p_A in sensibilidad:
 
     modelo.optimize()
 
-    #Acá se va a demorar bastante porque tiene generar 6 archivos, es decir, 6 veces se va a ejecutar las líneas siguientes
+    #Acá se va a demorar bastante porque tiene generar 7 archivos, es decir, 7 veces se va a ejecutar las líneas siguientes
     if modelo.Status == GRB.OPTIMAL:
         with open(nombre_txt, "w", encoding="utf-8") as archivo:
-            archivo.write(f"Instancia evaluada para el parametro: {atributo}\n")
-            archivo.write(f"Valor Funcion Objetivo Z: {modelo.ObjVal}\n\n")
+            archivo.write(f"Instancia evaluada para parametro: {parametro}\n")
+            archivo.write(f"Valor Funcion objetivo: {int(modelo.ObjVal)}\n\n")
 
-            #Bodegas activadas
+            # Bodegas activadas
             for k in K:
-                if z_k[k].X > 0.5:
+                if z_k[k].X > 0:
                     archivo.write(f"Bodega {k} activada.\n")
 
-            #Compras programadas
+            # Compras programadas
             for i in I:
                 for k in K:
                     for t in T:
-                        val = w_ikt[i,k,t].X
-                        if val > 1e-6:
-                            archivo.write(f"Semana {t}: Compras programadas {i} en bodega {k} = {val:.2f}\n")
+                        valor = w_ikt[i,k,t].X
+                        if valor > 0:
+                            archivo.write(f"Semana {t}: Compras programadas {i} en bodega {k} = {int(valor)}\n")
 
-            #Despachos
+            # Despachos
             for i,k,c,a,t,w in x_ikcatw.keys():
-                val = x_ikcatw[i,k,c,a,t,w].X
-                if val > 1e-6:
-                    archivo.write(f"Semana {t} [{w}]: Despacho {i} (edad {a}) desde {k} a {c} = {val:.2f}\n")
+                valor = x_ikcatw[i,k,c,a,t,w].X
+                if valor > 0:
+                    archivo.write(f"Semana {t} [{w}]: Despacho {i} (edad {a}) desde {k} a {c} = {int(valor)}\n")
 
-            #Compras de emergencia
+            # Compras de emergencia
             for i,c,t,w in e_ictw.keys():
-                val = e_ictw[i,c,t,w].X
-                if val > 1e-6:
-                    archivo.write(f"Semana {t} [{w}]: Compra de emergencia {i} en {c} = {val:.2f}\n")
+                valor = e_ictw[i,c,t,w].X
+                if valor > 0:
+                    archivo.write(f"Semana {t} [{w}]: Compra de emergencia {i} en {c} = {int(valor)}\n")
 
-            #Quiebres
+            # Quiebres
             for i,c,t,w in q_ictw.keys():
-                val = q_ictw[i,c,t,w].X
-                if val > 1e-6:
-                    archivo.write(f"Semana {t} [{w}]: Demanda no satisfecha {i} en {c} = {val:.2f}\n")
+                valor = q_ictw[i,c,t,w].X
+                if valor > 0:
+                    archivo.write(f"Semana {t} [{w}]: Demanda no satisfecha {i} en {c} = {int(valor)}\n")
 
-            #Vencimientos
+            # Vencimientos en CESFAM
             for i,c,t,w in vc_ictw.keys():
-                val = vc_ictw[i,c,t,w].X
-                if val > 1e-6:
-                    archivo.write(f"Semana {t} [{w}]: Medicamentos vencidos {i} en {c} = {val:.2f}\n")
+                valor = vc_ictw[i,c,t,w].X
+                if valor > 0:
+                    archivo.write(f"Semana {t} [{w}]: Medicamentos vencidos {i} en {c} = {int(valor)}\n")
 
+            # Vencimientos en Bodega
             for i,k,t,w in vb_iktw.keys():
-                val = vb_iktw[i,k,t,w].X
-                if val > 1e-6:
-                    archivo.write(f"Semana {t} [{w}]: Medicamentos vencidos {i} en bodega {k} = {val:.2f}\n")
+                valor = vb_iktw[i,k,t,w].X
+                if valor > 0:
+                    archivo.write(f"Semana {t} [{w}]: Medicamentos vencidos {i} en bodega {k} = {int(valor)}\n")
+                    
         print(f"{nombre_txt} generado")           
     else:
         print(f"\nEl modelo finalizó con estado: {modelo.Status}")

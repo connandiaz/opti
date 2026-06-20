@@ -35,12 +35,7 @@ F_k = 15000000
 Gamma = 56534100
 M = 10**4
 
-# --- FIX BUG 2: G_kt estaba en CAJAS (79.026), mientras CapB y H_ct del Excel
-# ya están en UNIDADES (comprimidos). El factor comprimidos/caja con que se
-# construyó H_ct es 250 (p.ej. 4.017 cajas -> 1.004.250 unidades). Se aplica el
-# mismo factor para dejar G_kt en unidades y que sea consistente con el resto.
-UNIDADES_POR_CAJA = 250
-G_kt = 79026 * UNIDADES_POR_CAJA   # = 19.756.500 unidades/semana
+G_kt = 79026 * 250   
 
 alpha_i = dict(zip(alpha_df["medicamento"], alpha_df["nivel"]))
 
@@ -80,12 +75,6 @@ CD_ikc = {
     for _, row in cd_df.iterrows()
 }
 
-# --- FIX BUG 1: el inventario inicial se ubica SIEMPRE en la edad a = L_i del
-# medicamento (vida útil remanente completa, según el supuesto del informe).
-# Antes la clave usaba la columna "edad" del Excel; si esa edad no coincidía
-# con L_i, el lookup S0_ika.get((i,k,L_i[i]),0) del modelo devolvía 0 y se
-# perdía el stock de 4 de los 5 medicamentos. Forzar la edad a L_i hace el
-# código robusto aunque la columna "edad" del Excel venga mal.
 S0_ika = {
     (row["medicamento"], row["bodega"], int(L_i[row["medicamento"]])): row["inventario"]
     for _, row in s0_df.iterrows()
